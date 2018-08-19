@@ -1,0 +1,23 @@
+# get rid of the regular syslog
+sudo dpkg --purge rsyslog
+sudo apt-get install busybox-syslogd
+
+# start pi readonly on next boot
+sudo mount -o remount rw /boot
+echo "dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait fastboot noswap ro" | sudo tee /boot/cmdline.txt
+
+sudo rm -rf /var/lib/dhcp/
+sudo ln -s /tmp /var/lib/dhcp
+sudo rm -rf /var/run /var/lock /var/log
+sudo ln -s /tmp /var/run 
+sudo ln -s /tmp /var/lock
+sudo ln -s /tmp /var/log
+
+
+sudo rm -rf /var/lib/php5/sessions
+sudo mkdir /tmp/php5
+sudo mkdir /tmp/php5/sessions
+sudo chmod -R 750 /tmp/php5
+sudo ln -s /tmp/php5/sessions /var/lib/php5/sessions
+
+# copy rc.local from default config files
